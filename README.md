@@ -1,7 +1,7 @@
 # 🔐 Cryptonism
 
 **Frontend End-to-End Encryption Library**  
-Secure your authentication flows and sensitive data directly in the browser.
+Secure your authentication flows and sensitive data with zero-knowledge architecture directly in the browser.
 
 ---
 
