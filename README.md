@@ -1,4 +1,4 @@
-# 🔐 Cryptonism
+# 🔐 Cryptonism &middot; [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/sabkat-ahmed-rafi/cryptonism/blob/main/LICENSE)
 
 **Frontend End-to-End Encryption Library**  
 Secure your authentication flows and sensitive data with zero-knowledge architecture directly in the browser.
