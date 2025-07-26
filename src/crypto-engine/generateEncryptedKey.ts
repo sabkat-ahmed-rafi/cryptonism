@@ -1,6 +1,8 @@
 import { ArgonOptions } from "../types/types";
 import { uint8ArrayToBase64 } from "../utils/encoding";
 import argon2 from 'argon2-browser/dist/argon2-bundled.min.js';
+import { entropyToMnemonic } from '@scure/bip39';
+import { wordlist } from '@scure/bip39/wordlists/english.js';
 
 
 
@@ -39,12 +41,47 @@ export const generateEncryptedKey = async (
         cryptoKey,
         key
     );
-    const encryptedKeyUint8 = new Uint8Array(encryptedKeyArrayBuffer);
+    const encryptedKey = new Uint8Array(encryptedKeyArrayBuffer);
+
+      // 5. Recovery: Generate recovery key
+    const recoveryKey = crypto.getRandomValues(new Uint8Array(16));
+    const mnemonic = entropyToMnemonic(recoveryKey, wordlist); // 12-word phrase
+    const recoverySalt = crypto.getRandomValues(new Uint8Array(32));
+    const recoveryIV = crypto.getRandomValues(new Uint8Array(12));
+
+    const { hash: recoveryDerivedKey } = await argon2.hash({
+      pass: mnemonic,
+      salt: recoverySalt,
+      time: options?.time ?? 3,
+      mem: options?.mem ?? 65536,
+      hashLen: options?.hashLen ?? 32,
+      type: argon2.ArgonType.Argon2id,
+    });
+
+    const recoveryCryptoKey = await crypto.subtle.importKey(
+      "raw",
+      recoveryDerivedKey,
+      "AES-GCM",
+      false,
+      ["encrypt"]
+    );
+    const encryptedRecoveryKeyBuffer = await crypto.subtle.encrypt(
+      { name: "AES-GCM", iv: recoveryIV },
+      recoveryCryptoKey,
+      key
+    );
+
+    const encryptedRecoveryKey = new Uint8Array(encryptedRecoveryKeyBuffer);
 
     return {
-        encryptedKey: uint8ArrayToBase64(encryptedKeyUint8),
+        encryptedKey: uint8ArrayToBase64(encryptedKey),
         salt: uint8ArrayToBase64(salt),
         iv: uint8ArrayToBase64(iv),
+
+        recoveryPhrase: mnemonic, // Show this once to the user
+        encryptedRecoveryKey: uint8ArrayToBase64(encryptedRecoveryKey),
+        recoverySalt: uint8ArrayToBase64(recoverySalt),
+        recoveryIV: uint8ArrayToBase64(recoveryIV),
     }
 
 };
