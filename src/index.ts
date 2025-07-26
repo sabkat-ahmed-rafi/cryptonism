@@ -1,4 +1,4 @@
-// Exporting core classes
+// Exporting core functions
 export * from './crypto-engine/generateEncryptedKey';
 export * from './crypto-engine/decryptGeneratedKey';
 export * from './crypto-engine/rotatePassword';
