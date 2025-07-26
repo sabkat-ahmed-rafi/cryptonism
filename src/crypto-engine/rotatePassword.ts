@@ -3,7 +3,7 @@ import argon2 from "argon2-browser/dist/argon2-bundled.min.js";
 import { ArgonOptions } from "../types/types";
 import { PasswordRotationError } from "../errors/PasswordRotationError";
 
-export const rotateMasterPassword = async (
+export const rotatePassword = async (
   encryptedDataKey: string,
   oldPassword: string,
   newPassword: string,
