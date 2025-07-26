@@ -1,3 +1,3 @@
-export * from './crypto-engine/encryption';
-export * from './crypto-engine/decryption';
+export * from './crypto-engine/generateEncryptedKey';
+export * from './crypto-engine/decryptGeneratedKey';
 export * from './errors/DecryptionError';
