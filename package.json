@@ -31,6 +31,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@scure/bip39": "^1.6.0",
     "argon2-browser": "^1.18.0"
   }
 }
