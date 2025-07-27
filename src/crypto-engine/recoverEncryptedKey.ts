@@ -1,7 +1,7 @@
 import { RecoverEncryptionError } from "../errors/RecoverEncryptionError";
 import { ArgonOptions } from "../types/types";
 import { base64ToUint8Array } from "../utils/encoding";
-import argon2 from "argon2-browser/dist/argon2-bundled.min.js";
+import argon2 from "../config/argon2";
 
 export const recoverEncryptedKey = async (
   recoveryMnemonic: string,

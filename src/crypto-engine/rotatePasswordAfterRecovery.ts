@@ -1,5 +1,5 @@
 import { uint8ArrayToBase64 } from "../utils/encoding";
-import argon2 from "argon2-browser/dist/argon2-bundled.min.js";
+import argon2 from "../config/argon2";
 import { ArgonOptions } from "../types/types";
 
 export const rotatePasswordAfterRecovery = async (
