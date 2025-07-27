@@ -9,4 +9,5 @@ export default defineConfig({
   sourcemap: true,
   clean: true,
   minify: true,
+  noExternal: ['argon2-browser', '@scure/bip39'],
 });
