@@ -13,7 +13,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "run": "tsx src/index.ts",
-    "build": "tsc"
+    "build": "tsup"
   },
   "files": [
     "dist"
