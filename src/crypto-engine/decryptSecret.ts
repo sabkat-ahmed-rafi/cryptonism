@@ -24,7 +24,9 @@ export const decryptSecret = async (
       encryptedBytes
     );
 
-    return new TextDecoder().decode(decryptedBuffer);
+    const decryptedSecret = new TextDecoder().decode(decryptedBuffer);
+
+    return decryptedSecret;
   } catch {
     throw new DecryptionError();
   }
