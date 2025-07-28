@@ -91,3 +91,14 @@ export type rotatePasswordAfterRecoveryResults = {
   salt: string;
   iv: string;
 }
+
+// DecryptSecret related type
+export interface DecryptSecretParams {
+  encryptedSecret: string,
+  iv: string,
+  decryptedKey: Uint8Array
+}
+
+export type DecryptSecretResult = 
+  | { success: true; decryptedSecret: string }
+  | { success: false; error: DecryptionError };

@@ -1,11 +1,13 @@
 import { base64ToUint8Array } from "../utils/encoding";
 import { DecryptionError } from "../errors/DecryptionError";
+import { DecryptSecretParams, DecryptSecretResult } from "../types/types";
 
-export const decryptSecret = async (
-  encryptedSecret: string,
-  iv: string,
-  decryptedKey: Uint8Array
-): Promise<string> => {
+export const decryptSecret = async ({
+  encryptedSecret,
+  iv,
+  decryptedKey
+}: DecryptSecretParams
+): Promise<DecryptSecretResult> => {
   const ivBytes = base64ToUint8Array(iv);
   const encryptedBytes = base64ToUint8Array(encryptedSecret);
 
@@ -26,8 +28,8 @@ export const decryptSecret = async (
 
     const decryptedSecret = new TextDecoder().decode(decryptedBuffer);
 
-    return decryptedSecret;
+    return { success: true,  decryptedSecret: decryptedSecret };
   } catch {
-    throw new DecryptionError();
+    return { success: false, error: new DecryptionError() }
   }
 };
