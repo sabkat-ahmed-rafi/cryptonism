@@ -10,7 +10,7 @@ export const decryptGeneratedKey = async ({
   iv,
   encryptedKey,
   password,
-  options,
+  argonConfig,
   trackAttempts,
 }: DecryptGeneratedKeyParams): Promise<DecryptGeneratedKeyResult> => {
 
@@ -22,9 +22,9 @@ export const decryptGeneratedKey = async ({
   const { hash: derivedKey } = await argon2.hash({
     pass: password,
     saltBytes,
-    time: options?.time ?? defaultArgonOptions.time,
-    mem: options?.mem ?? defaultArgonOptions.mem,
-    hashLen: options?.hashLen ?? defaultArgonOptions.hashLen,
+    time: argonConfig?.time ?? defaultArgonOptions.time,
+    mem: argonConfig?.mem ?? defaultArgonOptions.mem,
+    hashLen: argonConfig?.hashLen ?? defaultArgonOptions.hashLen,
     type: argon2.ArgonType.Argon2id,
   });
 

@@ -11,7 +11,7 @@ export interface DecryptGeneratedKeyParams {
   iv: string;
   encryptedKey: string;
   password: string;
-  options?: ArgonOptions;
+  argonConfig?: ArgonOptions;
   trackAttempts?: TrackAttemptsOptions;
 }
 
