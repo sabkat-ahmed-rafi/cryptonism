@@ -45,8 +45,8 @@ export type AttemptTrackerConfig = {
   maxAttempts: number;
 };
 
-type DecryptSuccess = { decryptedKey: Uint8Array; attempts: number };
-type DecryptFailure = { error: DecryptionError; attempts?: number };
+type DecryptSuccess = { success: true, decryptedKey: Uint8Array; attempts: number };
+type DecryptFailure = { success: false, error: DecryptionError; attempts?: number };
 export type DecryptGeneratedKeyResult = DecryptSuccess | DecryptFailure;
 
 // Rotate Password related types 

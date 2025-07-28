@@ -50,7 +50,7 @@ export const decryptGeneratedKey = async ({
     };
 
 
-    return { decryptedKey, attempts: 0 };
+    return { success: true, decryptedKey, attempts: 0 };
   } catch {
     if (trackAttempts?.enable) {
       const { attempts } = trackFailedAttempt({
@@ -58,13 +58,10 @@ export const decryptGeneratedKey = async ({
         maxAttempts: trackAttempts.maxAttempts,
       });
 
-      return {
-        error: new DecryptionError(),
-        attempts,
-      };
-    }
+      return { success: false, error: new DecryptionError(), attempts };
+    };
 
-    return { error: new DecryptionError() };
+    return { success: false, error: new DecryptionError() };
   }
 
 };
