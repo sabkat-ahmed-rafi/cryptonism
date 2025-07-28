@@ -1,3 +1,5 @@
+import { DecryptionError } from "../errors/DecryptionError";
+
 export type ArgonOptions = {
   time?: number;
   mem?: number;
@@ -5,9 +7,9 @@ export type ArgonOptions = {
 }
 
 export interface DecryptGeneratedKeyParams {
-  base64Salt: string;
-  base64IV: string;
-  base64EncryptedVaultKey: string;
+  salt: string;
+  iv: string;
+  encryptedKey: string;
   password: string;
   options?: ArgonOptions;
   trackAttempts?: TrackAttemptsOptions;
@@ -24,3 +26,7 @@ export type AttemptTrackerConfig = {
   id: string;
   maxAttempts: number;
 };
+
+type DecryptSuccess = { decryptedKey: Uint8Array; attempts: number };
+type DecryptFailure = { error: DecryptionError; attempts?: number };
+export type DecryptGeneratedKeyResult = DecryptSuccess | DecryptFailure;

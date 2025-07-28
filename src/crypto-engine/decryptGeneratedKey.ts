@@ -1,38 +1,30 @@
 import { DecryptionError } from "../errors/DecryptionError";
-import { ArgonOptions } from "../types/types";
+import { DecryptGeneratedKeyParams, DecryptGeneratedKeyResult } from "../types/types";
 import { base64ToUint8Array } from "../utils/encoding";
 import argon2 from "../config/argon2";
 import { resetAttempts, trackFailedAttempt } from "../utils/attemptTracker";
 
 
-export const decryptGeneratedKey = async (  
-  base64Salt: string,
-  base64IV: string,
-  base64EncryptedVaultKey: string,
-  password: string,
-  options?: ArgonOptions,
-  trackAttempts?: {
-    enable: true;
-    id: string;
-    maxAttempts: number;
-  }
-): Promise<{
-  decryptedKey?: Uint8Array;
-  attempts?: number;
-  error?: DecryptionError;
-}> => {
+export const decryptGeneratedKey = async ({
+  salt,
+  iv,
+  encryptedKey,
+  password,
+  options,
+  trackAttempts,
+}: DecryptGeneratedKeyParams): Promise<DecryptGeneratedKeyResult> => {
 
-  const salt = base64ToUint8Array(base64Salt);
-  const iv = base64ToUint8Array(base64IV);
-  const encryptedVaultKey = base64ToUint8Array(base64EncryptedVaultKey);
+  const saltBytes = base64ToUint8Array(salt);
+  const ivBytes = base64ToUint8Array(iv);
+  const encryptedVaultKey = base64ToUint8Array(encryptedKey);
 
   // Derive key using Argon2id
   const { hash: derivedKey } = await argon2.hash({
     pass: password,
-    salt,
-    time: options?.time ?? 3,
-    mem: options?.mem ?? 65536,
-    hashLen: options?.hashLen ?? 32,
+    saltBytes,
+    time: options?.time ?? defaultArgonOptions.time,
+    mem: options?.mem ?? defaultArgonOptions.mem,
+    hashLen: options?.hashLen ?? defaultArgonOptions.hashLen,
     type: argon2.ArgonType.Argon2id,
   });
 
@@ -46,7 +38,7 @@ export const decryptGeneratedKey = async (
 
   try {
     const decryptedBuffer = await crypto.subtle.decrypt(
-      { name: 'AES-GCM', iv },
+      { name: 'AES-GCM', iv: ivBytes },
       cryptoKey,
       encryptedVaultKey
     );
