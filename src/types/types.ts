@@ -49,6 +49,21 @@ type DecryptSuccess = { decryptedKey: Uint8Array; attempts: number };
 type DecryptFailure = { error: DecryptionError; attempts?: number };
 export type DecryptGeneratedKeyResult = DecryptSuccess | DecryptFailure;
 
+// Rotate Password related types 
+export interface RotatePasswordParams {
+  encryptedKey: string,
+  salt: string,
+  iv: string,
+  oldPassword: string,
+  newPassword: string,
+  argonConfig?: ArgonOptions
+}
+
+export type RotatePasswordReturn  = {
+  encryptedKey: string;
+  salt: string;
+  iv: string;
+}
 
 // Recover Encrypted key related typs 
 export interface RecoverEncryptedKeyParams {

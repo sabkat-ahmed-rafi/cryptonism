@@ -1,32 +1,30 @@
 import { base64ToUint8Array, uint8ArrayToBase64 } from "../utils/encoding";
 import argon2 from "../config/argon2";
-import { ArgonOptions } from "../types/types";
+import { ArgonOptions, RotatePasswordParams, RotatePasswordReturn } from "../types/types";
 import { PasswordRotationError } from "../errors/PasswordRotationError";
+import { defaultArgonConfig } from "../config/defaultArgonConfig";
 
-export const rotatePassword = async (
-  encryptedDataKey: string,
-  oldPassword: string,
-  newPassword: string,
-  salt: string,
-  iv: string,
-  options?: ArgonOptions
-): Promise<{
-  encryptedDataKey: string;
-  salt: string;
-  iv: string;
-}> => {
+export const rotatePassword = async ({
+  encryptedKey,
+  salt,
+  iv,
+  oldPassword,
+  newPassword,
+  argonConfig
+}: RotatePasswordParams
+): Promise<RotatePasswordReturn> => {
   // 1. Prepare inputs
   const oldSalt = base64ToUint8Array(salt);
   const oldIV = base64ToUint8Array(iv);
-  const encryptedKey = base64ToUint8Array(encryptedDataKey);
+  const encryptedDataKey = base64ToUint8Array(encryptedKey);
 
   // 2. Derive key from old password
   const { hash: oldDerivedKey } = await argon2.hash({
     pass: oldPassword,
     salt: oldSalt,
-    time: options?.time ?? 3,
-    mem: options?.mem ?? 65536,
-    hashLen: options?.hashLen ?? 32,
+    time: argonConfig?.time ?? defaultArgonConfig.time,
+    mem: argonConfig?.mem ?? defaultArgonConfig.mem,
+    hashLen: argonConfig?.hashLen ?? defaultArgonConfig.hashLen,
     type: argon2.ArgonType.Argon2id,
   });
 
@@ -44,7 +42,7 @@ export const rotatePassword = async (
     decryptedKeyBuffer = await crypto.subtle.decrypt(
       { name: "AES-GCM", iv: oldIV },
       oldCryptoKey,
-      encryptedKey
+      encryptedDataKey
     );
   } catch {
     throw new PasswordRotationError();
@@ -59,9 +57,9 @@ export const rotatePassword = async (
   const { hash: newDerivedKey } = await argon2.hash({
     pass: newPassword,
     salt: newSalt,
-    time: options?.time ?? 3,
-    mem: options?.mem ?? 65536,
-    hashLen: options?.hashLen ?? 32,
+    time: argonConfig?.time ?? defaultArgonConfig.time,
+    mem: argonConfig?.mem ?? defaultArgonConfig.mem,
+    hashLen: argonConfig?.hashLen ?? defaultArgonConfig.hashLen,
     type: argon2.ArgonType.Argon2id,
   });
 
@@ -83,7 +81,7 @@ export const rotatePassword = async (
 
   // 6. Return updated encrypted values
   return {
-    encryptedDataKey: uint8ArrayToBase64(newEncryptedDataKey),
+    encryptedKey: uint8ArrayToBase64(newEncryptedDataKey),
     salt: uint8ArrayToBase64(newSalt),
     iv: uint8ArrayToBase64(newIV),
   };
