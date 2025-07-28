@@ -1,6 +1,6 @@
 import { base64ToUint8Array, uint8ArrayToBase64 } from "../utils/encoding";
 import argon2 from "../config/argon2";
-import { ArgonOptions, RotatePasswordParams, RotatePasswordReturn } from "../types/types";
+import { RotatePasswordParams, RotatePasswordReturn } from "../types/types";
 import { PasswordRotationError } from "../errors/PasswordRotationError";
 import { defaultArgonConfig } from "../config/defaultArgonConfig";
 
