@@ -2,6 +2,7 @@ import { DecryptionError } from "../errors/DecryptionError";
 import { ArgonOptions } from "../types/types";
 import { base64ToUint8Array } from "../utils/encoding";
 import argon2 from "../config/argon2";
+import { resetAttempts, trackFailedAttempt } from "../utils/attemptTracker";
 
 
 export const decryptGeneratedKey = async (  
@@ -9,11 +10,16 @@ export const decryptGeneratedKey = async (
   base64IV: string,
   base64EncryptedVaultKey: string,
   password: string,
-  options?: ArgonOptions
+  options?: ArgonOptions,
+  trackAttempts?: {
+    enable: true;
+    id: string;
+    maxAttempts: number;
+  }
 ): Promise<{
   decryptedKey?: Uint8Array;
   attempts?: number;
-  error?: string;
+  error?: DecryptionError;
 }> => {
 
   const salt = base64ToUint8Array(base64Salt);
@@ -44,12 +50,28 @@ export const decryptGeneratedKey = async (
       cryptoKey,
       encryptedVaultKey
     );
+    const decryptedKey = new Uint8Array(decryptedBuffer);
 
-    const decryptedKey = new Uint8Array(decryptedBuffer)
+    if (trackAttempts?.enable) {
+      resetAttempts(trackAttempts.id);
+    };
 
-    return decryptedKey;
+
+    return { decryptedKey, attempts: 0 };
   } catch {
-    throw new DecryptionError();
+    if (trackAttempts?.enable) {
+      const { attempts } = trackFailedAttempt({
+        id: trackAttempts.id,
+        maxAttempts: trackAttempts.maxAttempts,
+      });
+
+      return {
+        error: new DecryptionError(),
+        attempts,
+      };
+    }
+
+    return { error: new DecryptionError() };
   }
 
 };
