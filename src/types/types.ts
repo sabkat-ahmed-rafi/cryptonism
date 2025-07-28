@@ -2,7 +2,7 @@ import { DecryptionError } from "../errors/DecryptionError";
 import { RecoverEncryptionError } from "../errors/RecoverEncryptionError";
 
 // Argon config type
-export type ArgonOptions = {
+export type ArgonConfig = {
   time?: number;
   mem?: number;
   hashLen?: number;
@@ -11,7 +11,7 @@ export type ArgonOptions = {
 // Generate Encrypted Key related types 
 export interface GenerateEncryptedKeyParams {
   password: string,
-  argonConfig?: ArgonOptions
+  argonConfig?: ArgonConfig
 }
 
 export type GenerateEncryptedKeyResult = {
@@ -30,7 +30,7 @@ export interface DecryptGeneratedKeyParams {
   iv: string;
   encryptedKey: string;
   password: string;
-  argonConfig?: ArgonOptions;
+  argonConfig?: ArgonConfig;
   trackAttempts?: TrackAttemptsOptions;
 }
 
@@ -56,7 +56,7 @@ export interface RotatePasswordParams {
   iv: string,
   oldPassword: string,
   newPassword: string,
-  argonConfig?: ArgonOptions
+  argonConfig?: ArgonConfig
 }
 
 export type RotatePasswordReturn  = {
@@ -71,7 +71,7 @@ export interface RecoverEncryptedKeyParams {
   encryptedRecoveryKey: string,
   recoverySalt: string,
   recoveryIV: string,
-  argonConfig?: ArgonOptions
+  argonConfig?: ArgonConfig
 }
 
 export type RecoverEncryptedKeyResult = 
@@ -83,7 +83,7 @@ export type RecoverEncryptedKeyResult =
 export interface rotatePasswordAfterRecoveryParams {
   recoveredDecryptedKey: Uint8Array,
   newPassword: string,
-  argonConfig?: ArgonOptions
+  argonConfig?: ArgonConfig
 }
 
 export type rotatePasswordAfterRecoveryResults = {
