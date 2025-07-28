@@ -1,15 +1,15 @@
-import { ArgonOptions } from "../types/types";
+import { GenerateEncryptedKeyParams, GenerateEncryptedKeyResult } from "../types/types";
 import { uint8ArrayToBase64 } from "../utils/encoding";
 import argon2 from "../config/argon2";
 import { entropyToMnemonic } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
+import { defaultArgonConfig } from "../config/defaultArgonConfig";
 
 
 
 export const generateEncryptedKey = async (
-    password: string,
-    options?: ArgonOptions
-) => {
+  {password, argonConfig}: GenerateEncryptedKeyParams
+): Promise<GenerateEncryptedKeyResult> => {
     // 1. Generate random salt (32 bytes)
     const salt = crypto.getRandomValues(new Uint8Array(32));
 
@@ -17,9 +17,9 @@ export const generateEncryptedKey = async (
     const { hash: derivedKey } = await argon2.hash({
         pass: password,
         salt,
-        time: options?.time ?? 3,
-        mem: options?.mem ?? 65536,
-        hashLen: options?.hashLen ?? 32,
+        time: argonConfig?.time ?? defaultArgonConfig.time,
+        mem: argonConfig?.mem ?? defaultArgonConfig.mem,
+        hashLen: argonConfig?.hashLen ?? defaultArgonConfig.hashLen,
         type: argon2.ArgonType.Argon2id,
     });
 
@@ -52,9 +52,9 @@ export const generateEncryptedKey = async (
     const { hash: recoveryDerivedKey } = await argon2.hash({
       pass: mnemonic,
       salt: recoverySalt,
-      time: options?.time ?? 3,
-      mem: options?.mem ?? 65536,
-      hashLen: options?.hashLen ?? 32,
+      time: argonConfig?.time ?? defaultArgonConfig.time,
+      mem: argonConfig?.mem ?? defaultArgonConfig.mem,
+      hashLen: argonConfig?.hashLen ?? defaultArgonConfig.hashLen,
       type: argon2.ArgonType.Argon2id,
     });
 

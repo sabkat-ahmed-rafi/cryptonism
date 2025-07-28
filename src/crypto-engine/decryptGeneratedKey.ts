@@ -3,6 +3,7 @@ import { DecryptGeneratedKeyParams, DecryptGeneratedKeyResult } from "../types/t
 import { base64ToUint8Array } from "../utils/encoding";
 import argon2 from "../config/argon2";
 import { resetAttempts, trackFailedAttempt } from "../utils/attemptTracker";
+import { defaultArgonConfig } from "../config/defaultArgonConfig";
 
 
 export const decryptGeneratedKey = async ({
@@ -22,9 +23,9 @@ export const decryptGeneratedKey = async ({
   const { hash: derivedKey } = await argon2.hash({
     pass: password,
     saltBytes,
-    time: argonConfig?.time ?? defaultArgonOptions.time,
-    mem: argonConfig?.mem ?? defaultArgonOptions.mem,
-    hashLen: argonConfig?.hashLen ?? defaultArgonOptions.hashLen,
+    time: argonConfig?.time ?? defaultArgonConfig.time,
+    mem: argonConfig?.mem ?? defaultArgonConfig.mem,
+    hashLen: argonConfig?.hashLen ?? defaultArgonConfig.hashLen,
     type: argon2.ArgonType.Argon2id,
   });
 

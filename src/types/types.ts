@@ -1,11 +1,29 @@
 import { DecryptionError } from "../errors/DecryptionError";
 
+// Argon config type
 export type ArgonOptions = {
   time?: number;
   mem?: number;
   hashLen?: number;
 }
 
+// Generate Encrypted Key related types 
+export interface GenerateEncryptedKeyParams {
+  password: string,
+  argonConfig?: ArgonOptions
+}
+
+export type GenerateEncryptedKeyResult = {
+  encryptedKey: string;
+  salt: string;
+  iv: string;
+  recoveryPhrase: string;
+  encryptedRecoveryKey: string;
+  recoverySalt: string;
+  recoveryIV: string;
+}
+
+// Decrypt generated key related types 
 export interface DecryptGeneratedKeyParams {
   salt: string;
   iv: string;
@@ -14,7 +32,6 @@ export interface DecryptGeneratedKeyParams {
   argonConfig?: ArgonOptions;
   trackAttempts?: TrackAttemptsOptions;
 }
-
 
 export interface TrackAttemptsOptions {
   enable: true;
@@ -30,3 +47,5 @@ export type AttemptTrackerConfig = {
 type DecryptSuccess = { decryptedKey: Uint8Array; attempts: number };
 type DecryptFailure = { error: DecryptionError; attempts?: number };
 export type DecryptGeneratedKeyResult = DecryptSuccess | DecryptFailure;
+
+
