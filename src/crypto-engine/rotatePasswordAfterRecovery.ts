@@ -1,16 +1,17 @@
 import { uint8ArrayToBase64 } from "../utils/encoding";
 import argon2 from "../config/argon2";
-import { ArgonOptions } from "../types/types";
+import { 
+  rotatePasswordAfterRecoveryParams, 
+  rotatePasswordAfterRecoveryResults
+} from "../types/types";
+import { defaultArgonConfig } from "../config/defaultArgonConfig";
 
-export const rotatePasswordAfterRecovery = async (
-  recoveredDataKey: Uint8Array, // decrypted key from recovery
-  newPassword: string,
-  options?: ArgonOptions
-): Promise<{
-  encryptedKey: string;
-  salt: string;
-  iv: string;
-}> => {
+export const rotatePasswordAfterRecovery = async ({
+  recoveredDecryptedKey,
+  newPassword,
+  argonConfig 
+}: rotatePasswordAfterRecoveryParams
+): Promise<rotatePasswordAfterRecoveryResults> => {
   // 1. Generate new salt and IV
   const newSalt = crypto.getRandomValues(new Uint8Array(32));
   const newIV = crypto.getRandomValues(new Uint8Array(12));
@@ -19,9 +20,9 @@ export const rotatePasswordAfterRecovery = async (
   const { hash: newDerivedKey } = await argon2.hash({
     pass: newPassword,
     salt: newSalt,
-    time: options?.time ?? 3,
-    mem: options?.mem ?? 65536,
-    hashLen: options?.hashLen ?? 32,
+    time: argonConfig?.time ?? defaultArgonConfig.time,
+    mem: argonConfig?.mem ?? defaultArgonConfig.mem,
+    hashLen: argonConfig?.hashLen ?? defaultArgonConfig.hashLen,
     type: argon2.ArgonType.Argon2id,
   });
 
@@ -37,7 +38,7 @@ export const rotatePasswordAfterRecovery = async (
   const encryptedDataKeyBuffer = await crypto.subtle.encrypt(
     { name: "AES-GCM", iv: newIV },
     newCryptoKey,
-    recoveredDataKey
+    recoveredDecryptedKey
   );
 
   const encryptedKey = new Uint8Array(encryptedDataKeyBuffer);

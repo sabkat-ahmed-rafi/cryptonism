@@ -62,3 +62,17 @@ export interface RecoverEncryptedKeyParams {
 export type RecoverEncryptedKeyResult = 
   | { success: true; decryptedKey: Uint8Array }
   | { success: false; error: RecoverEncryptionError };
+
+
+// Rotate Password After Recovery types 
+export interface rotatePasswordAfterRecoveryParams {
+  recoveredDecryptedKey: Uint8Array,
+  newPassword: string,
+  argonConfig?: ArgonOptions
+}
+
+export type rotatePasswordAfterRecoveryResults = {
+  encryptedKey: string;
+  salt: string;
+  iv: string;
+}
