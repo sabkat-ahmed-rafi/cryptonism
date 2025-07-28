@@ -3,3 +3,8 @@ export type ArgonOptions = {
   mem?: number;
   hashLen?: number;
 }
+
+export type AttemptTrackerConfig = {
+  id: string;
+  maxAttempts: number;
+};

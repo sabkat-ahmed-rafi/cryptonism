@@ -10,7 +10,11 @@ export const decryptGeneratedKey = async (
   base64EncryptedVaultKey: string,
   password: string,
   options?: ArgonOptions
-): Promise<Uint8Array> => {
+): Promise<{
+  decryptedKey?: Uint8Array;
+  attempts?: number;
+  error?: string;
+}> => {
 
   const salt = base64ToUint8Array(base64Salt);
   const iv = base64ToUint8Array(base64IV);
