@@ -1,9 +1,11 @@
+import { EncryptedSecretResult, EncryptSecretParams } from "../types/types";
 import { uint8ArrayToBase64 } from "../utils/encoding";
 
-export const encryptSecret = async (
-  secret: string,
-  decryptedKey: Uint8Array
-): Promise<{ encryptedSecret: string; secretIV: string }> => {
+export const encryptSecret = async ({
+  secret,
+  decryptedKey
+}: EncryptSecretParams
+): Promise<EncryptedSecretResult> => {
   const iv = crypto.getRandomValues(new Uint8Array(12));
 
   const cryptoKey = await crypto.subtle.importKey(
@@ -23,6 +25,6 @@ export const encryptSecret = async (
 
   return {
     encryptedSecret: uint8ArrayToBase64(new Uint8Array(encryptedBuffer)),
-    secretIV: uint8ArrayToBase64(iv),
+    iv: uint8ArrayToBase64(iv),
   };
 };

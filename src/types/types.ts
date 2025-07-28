@@ -92,6 +92,17 @@ export type rotatePasswordAfterRecoveryResults = {
   iv: string;
 }
 
+// EncryptSecret related type
+export interface EncryptSecretParams {
+  secret: string,
+  decryptedKey: Uint8Array
+}
+
+export type EncryptedSecretResult = {
+  encryptedSecret: string;
+  iv: string
+}
+
 // DecryptSecret related type
 export interface DecryptSecretParams {
   encryptedSecret: string,
@@ -100,5 +111,5 @@ export interface DecryptSecretParams {
 }
 
 export type DecryptSecretResult = 
-  | { success: true; decryptedSecret: string }
-  | { success: false; error: DecryptionError };
+| { success: true; decryptedSecret: string }
+| { success: false; error: DecryptionError };
