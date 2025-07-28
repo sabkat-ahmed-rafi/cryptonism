@@ -1,15 +1,18 @@
 import { RecoverEncryptionError } from "../errors/RecoverEncryptionError";
-import { ArgonOptions } from "../types/types";
+import { RecoverEncryptedKeyParams, RecoverEncryptedKeyResult } from "../types/types";
 import { base64ToUint8Array } from "../utils/encoding";
 import argon2 from "../config/argon2";
+import { defaultArgonConfig } from "../config/defaultArgonConfig";
 
 export const recoverEncryptedKey = async (
-  recoveryMnemonic: string,
-  encryptedRecoveryKey: string,
-  recoverySalt: string,
-  recoveryIV: string,
-  options?: ArgonOptions
-): Promise<Uint8Array> => {
+  { recoveryMnemonic,
+    encryptedRecoveryKey,
+    recoverySalt,
+    recoveryIV,
+    argonConfig
+  }: RecoverEncryptedKeyParams
+): Promise<RecoverEncryptedKeyResult> => {
+  try {
   const salt = base64ToUint8Array(recoverySalt);
   const iv = base64ToUint8Array(recoveryIV);
   const encryptedKey = base64ToUint8Array(encryptedRecoveryKey);
@@ -17,9 +20,9 @@ export const recoverEncryptedKey = async (
   const { hash: derivedKey } = await argon2.hash({
     pass: recoveryMnemonic,
     salt,
-    time: options?.time ?? 3,
-    mem: options?.mem ?? 65536,
-    hashLen: options?.hashLen ?? 32,
+    time: argonConfig?.time ?? defaultArgonConfig.time,
+    mem: argonConfig?.mem ?? defaultArgonConfig.mem,
+    hashLen: argonConfig?.hashLen ?? defaultArgonConfig.hashLen,
     type: argon2.ArgonType.Argon2id,
   });
 
@@ -31,7 +34,6 @@ export const recoverEncryptedKey = async (
     ["decrypt"]
   );
 
-  try {
     const decryptedKeyBuffer = await crypto.subtle.decrypt(
       { name: "AES-GCM", iv },
       cryptoKey,
@@ -40,8 +42,8 @@ export const recoverEncryptedKey = async (
     
     const decryptedKey = new Uint8Array(decryptedKeyBuffer);
     
-    return decryptedKey;
+    return { success: true, decryptedKey: decryptedKey };
   } catch {
-    throw new RecoverEncryptionError();
+    return { success: false, error: new RecoverEncryptionError() };
   }
 };

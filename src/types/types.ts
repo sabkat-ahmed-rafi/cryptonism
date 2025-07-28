@@ -1,4 +1,5 @@
 import { DecryptionError } from "../errors/DecryptionError";
+import { RecoverEncryptionError } from "../errors/RecoverEncryptionError";
 
 // Argon config type
 export type ArgonOptions = {
@@ -49,3 +50,15 @@ type DecryptFailure = { error: DecryptionError; attempts?: number };
 export type DecryptGeneratedKeyResult = DecryptSuccess | DecryptFailure;
 
 
+// Recover Encrypted key related typs 
+export interface RecoverEncryptedKeyParams {
+  recoveryMnemonic: string,
+  encryptedRecoveryKey: string,
+  recoverySalt: string,
+  recoveryIV: string,
+  argonConfig?: ArgonOptions
+}
+
+export type RecoverEncryptedKeyResult = 
+  | { success: true; decryptedKey: Uint8Array }
+  | { success: false; error: RecoverEncryptionError };
