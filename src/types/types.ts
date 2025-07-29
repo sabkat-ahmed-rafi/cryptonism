@@ -107,10 +107,18 @@ export interface EncryptSecretParams {
   decryptedKey: Uint8Array
 }
 
-export type EncryptedSecretResult = {
+export type EncryptedSecretSuccess = {
+  success: true;
   encryptedSecret: string;
-  iv: string
-}
+  iv: string;
+};
+
+export type EncryptedSecretFailure = {
+  success: false;
+  error: EncryptionError;
+};
+
+export type EncryptedSecretResult = EncryptedSecretSuccess | EncryptedSecretFailure;
 
 // DecryptSecret related type
 export interface DecryptSecretParams {
