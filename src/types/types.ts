@@ -104,11 +104,21 @@ export interface rotatePasswordAfterRecoveryParams {
   argonConfig?: ArgonConfig
 }
 
-export type rotatePasswordAfterRecoveryResults = {
+export type RotatePasswordAfterRecoverySuccess = {
+  success: true;
   encryptedKey: string;
   salt: string;
   iv: string;
-}
+};
+
+export type RotatePasswordAfterRecoveryFailure = {
+  success: false;
+  error: PasswordRotationError;
+};
+
+export type RotatePasswordAfterRecoveryResult =
+  | RotatePasswordAfterRecoverySuccess
+  | RotatePasswordAfterRecoveryFailure;
 
 // EncryptSecret related type
 export interface EncryptSecretParams {
