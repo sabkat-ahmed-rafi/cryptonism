@@ -1,5 +1,6 @@
 import { DecryptionError } from "../errors/DecryptionError";
 import { EncryptionError } from "../errors/EncryptionError";
+import { PasswordRotationError } from "../errors/PasswordRotationError";
 import { RecoverEncryptionError } from "../errors/RecoverEncryptionError";
 
 // Argon config type
@@ -68,11 +69,19 @@ export interface RotatePasswordParams {
   argonConfig?: ArgonConfig
 }
 
-export type RotatePasswordReturn  = {
+export type RotatePasswordSuccess = {
+  success: true;
   encryptedKey: string;
   salt: string;
   iv: string;
-}
+};
+
+export type RotatePasswordFailure = {
+  success: false;
+  error: PasswordRotationError;
+};
+
+export type RotatePasswordReturn = RotatePasswordSuccess | RotatePasswordFailure;
 
 // Recover Encrypted key related typs 
 export interface RecoverEncryptedKeyParams {
