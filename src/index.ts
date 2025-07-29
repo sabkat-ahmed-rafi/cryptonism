@@ -8,6 +8,7 @@ export * from './crypto-engine/encryptSecret';
 export * from './crypto-engine/decryptSecret';
 
 // Exporting error classes
+export * from './errors/EncryptionError';
 export * from './errors/DecryptionError';
 export * from './errors/PasswordRotationError';
 export * from './errors/RecoverEncryptionError';
