@@ -14,30 +14,31 @@ export const decryptGeneratedKey = async ({
   argonConfig,
   trackAttempts,
 }: DecryptGeneratedKeyParams): Promise<DecryptGeneratedKeyResult> => {
-
-  const saltBytes = base64ToUint8Array(salt);
-  const ivBytes = base64ToUint8Array(iv);
-  const encryptedVaultKey = base64ToUint8Array(encryptedKey);
-
-  // Derive key using Argon2id
-  const { hash: derivedKey } = await argon2.hash({
-    pass: password,
-    saltBytes,
-    time: argonConfig?.time ?? defaultArgonConfig.time,
-    mem: argonConfig?.mem ?? defaultArgonConfig.mem,
-    hashLen: argonConfig?.hashLen ?? defaultArgonConfig.hashLen,
-    type: argon2.ArgonType.Argon2id,
-  });
-
-  const cryptoKey = await crypto.subtle.importKey(
-    'raw',
-    derivedKey,
-    'AES-GCM',
-    false,
-    ['decrypt']
-  );
-
+  
   try {
+    const saltBytes = base64ToUint8Array(salt);
+    const ivBytes = base64ToUint8Array(iv);
+    const encryptedVaultKey = base64ToUint8Array(encryptedKey);
+
+    // Derive key using Argon2id
+    const { hash: derivedKey } = await argon2.hash({
+      pass: password,
+      saltBytes,
+      time: argonConfig?.time ?? defaultArgonConfig.time,
+      mem: argonConfig?.mem ?? defaultArgonConfig.mem,
+      hashLen: argonConfig?.hashLen ?? defaultArgonConfig.hashLen,
+      type: argon2.ArgonType.Argon2id,
+    });
+
+    const cryptoKey = await crypto.subtle.importKey(
+      'raw',
+      derivedKey,
+      'AES-GCM',
+      false,
+      ['decrypt']
+    );
+
+    // Decryption
     const decryptedBuffer = await crypto.subtle.decrypt(
       { name: 'AES-GCM', iv: ivBytes },
       cryptoKey,

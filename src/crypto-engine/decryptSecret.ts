@@ -8,18 +8,18 @@ export const decryptSecret = async ({
   decryptedKey
 }: DecryptSecretParams
 ): Promise<DecryptSecretResult> => {
-  const ivBytes = base64ToUint8Array(iv);
-  const encryptedBytes = base64ToUint8Array(encryptedSecret);
-
-  const cryptoKey = await crypto.subtle.importKey(
-    "raw",
-    decryptedKey,
-    "AES-GCM",
-    false,
-    ["decrypt"]
-  );
-
   try {
+    const ivBytes = base64ToUint8Array(iv);
+    const encryptedBytes = base64ToUint8Array(encryptedSecret);
+
+    const cryptoKey = await crypto.subtle.importKey(
+      "raw",
+      decryptedKey,
+      "AES-GCM",
+      false,
+      ["decrypt"]
+    );
+
     const decryptedBuffer = await crypto.subtle.decrypt(
       { name: "AES-GCM", iv: ivBytes },
       cryptoKey,

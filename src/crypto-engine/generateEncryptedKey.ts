@@ -4,12 +4,15 @@ import argon2 from "../config/argon2";
 import { entropyToMnemonic } from '@scure/bip39';
 import { wordlist } from '@scure/bip39/wordlists/english';
 import { defaultArgonConfig } from "../config/defaultArgonConfig";
+import { EncryptionError } from "../errors/EncryptionError";
 
 
 
 export const generateEncryptedKey = async (
   {password, argonConfig}: GenerateEncryptedKeyParams
 ): Promise<GenerateEncryptedKeyResult> => {
+
+  try {
     // 1. Generate random salt (32 bytes)
     const salt = crypto.getRandomValues(new Uint8Array(32));
 
@@ -74,14 +77,18 @@ export const generateEncryptedKey = async (
     const encryptedRecoveryKey = new Uint8Array(encryptedRecoveryKeyBuffer);
 
     return {
-        encryptedKey: uint8ArrayToBase64(encryptedKey),
-        salt: uint8ArrayToBase64(salt),
-        iv: uint8ArrayToBase64(iv),
+      success: true,
+      encryptedKey: uint8ArrayToBase64(encryptedKey),
+      salt: uint8ArrayToBase64(salt),
+      iv: uint8ArrayToBase64(iv),
 
-        recoveryPhrase: mnemonic, // Show this once to the user
-        encryptedRecoveryKey: uint8ArrayToBase64(encryptedRecoveryKey),
-        recoverySalt: uint8ArrayToBase64(recoverySalt),
-        recoveryIV: uint8ArrayToBase64(recoveryIV),
+      recoveryPhrase: mnemonic, // Show this once to the user
+      encryptedRecoveryKey: uint8ArrayToBase64(encryptedRecoveryKey),
+      recoverySalt: uint8ArrayToBase64(recoverySalt),
+      recoveryIV: uint8ArrayToBase64(recoveryIV),
     }
+  } catch {
+    return { success: false, error: new EncryptionError() }
+  }
 
 };

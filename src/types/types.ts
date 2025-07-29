@@ -1,4 +1,5 @@
 import { DecryptionError } from "../errors/DecryptionError";
+import { EncryptionError } from "../errors/EncryptionError";
 import { RecoverEncryptionError } from "../errors/RecoverEncryptionError";
 
 // Argon config type
@@ -14,7 +15,8 @@ export interface GenerateEncryptedKeyParams {
   argonConfig?: ArgonConfig
 }
 
-export type GenerateEncryptedKeyResult = {
+export type GenerateEncryptedKeySuccess = {
+  success: true;
   encryptedKey: string;
   salt: string;
   iv: string;
@@ -23,6 +25,13 @@ export type GenerateEncryptedKeyResult = {
   recoverySalt: string;
   recoveryIV: string;
 }
+
+export type GenerateEncryptedKeyFailure = {
+  success: false;
+  error: EncryptionError;
+};
+
+export type GenerateEncryptedKeyResult = GenerateEncryptedKeySuccess | GenerateEncryptedKeyFailure;
 
 // Decrypt generated key related types 
 export interface DecryptGeneratedKeyParams {
