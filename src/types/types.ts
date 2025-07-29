@@ -16,7 +16,7 @@ export interface GenerateEncryptedKeyParams {
   argonConfig?: ArgonConfig
 }
 
-export type GenerateEncryptedKeySuccess = {
+type GenerateEncryptedKeySuccess = {
   success: true;
   encryptedKey: string;
   salt: string;
@@ -27,7 +27,7 @@ export type GenerateEncryptedKeySuccess = {
   recoveryIV: string;
 }
 
-export type GenerateEncryptedKeyFailure = {
+type GenerateEncryptedKeyFailure = {
   success: false;
   error: EncryptionError;
 };
@@ -44,6 +44,10 @@ export interface DecryptGeneratedKeyParams {
   trackAttempts?: TrackAttemptsOptions;
 }
 
+type DecryptSuccess = { success: true, decryptedKey: Uint8Array; attempts: number };
+type DecryptFailure = { success: false, error: DecryptionError; attempts?: number };
+export type DecryptGeneratedKeyResult = DecryptSuccess | DecryptFailure;
+
 export interface TrackAttemptsOptions {
   enable: true;
   id: string;
@@ -55,9 +59,6 @@ export type AttemptTrackerConfig = {
   maxAttempts: number;
 };
 
-type DecryptSuccess = { success: true, decryptedKey: Uint8Array; attempts: number };
-type DecryptFailure = { success: false, error: DecryptionError; attempts?: number };
-export type DecryptGeneratedKeyResult = DecryptSuccess | DecryptFailure;
 
 // Rotate Password related types 
 export interface RotatePasswordParams {
@@ -69,14 +70,14 @@ export interface RotatePasswordParams {
   argonConfig?: ArgonConfig
 }
 
-export type RotatePasswordSuccess = {
+type RotatePasswordSuccess = {
   success: true;
   encryptedKey: string;
   salt: string;
   iv: string;
 };
 
-export type RotatePasswordFailure = {
+type RotatePasswordFailure = {
   success: false;
   error: PasswordRotationError;
 };
@@ -104,14 +105,14 @@ export interface rotatePasswordAfterRecoveryParams {
   argonConfig?: ArgonConfig
 }
 
-export type RotatePasswordAfterRecoverySuccess = {
+type RotatePasswordAfterRecoverySuccess = {
   success: true;
   encryptedKey: string;
   salt: string;
   iv: string;
 };
 
-export type RotatePasswordAfterRecoveryFailure = {
+type RotatePasswordAfterRecoveryFailure = {
   success: false;
   error: PasswordRotationError;
 };
@@ -126,13 +127,13 @@ export interface EncryptSecretParams {
   decryptedKey: Uint8Array
 }
 
-export type EncryptedSecretSuccess = {
+ type EncryptedSecretSuccess = {
   success: true;
   encryptedSecret: string;
   iv: string;
 };
 
-export type EncryptedSecretFailure = {
+type EncryptedSecretFailure = {
   success: false;
   error: EncryptionError;
 };
