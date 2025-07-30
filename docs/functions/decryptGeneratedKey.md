@@ -303,6 +303,6 @@ if (!result.success) {
 
 ## Next Steps
 
-- [🔐 Learn to encrypt secrets](encryptSecret.md)
-- [🔄 Set up password rotation](rotatePassword.md)
+- [🔐 Learn to encrypt secrets](/functions/encryptSecret.md)
+- [🔄 Set up password rotation](/functions/rotatePassword.md)
 - [🛡️ Implement security best practices](/reference/security.md)

@@ -202,4 +202,3 @@ const user = {
 
 - [📚 Review Function Documentation](/functions/)
 - [⚠️ Understand Error Handling](/reference/errors.md)
-- [🔧 See Implementation Examples](/examples.md)

@@ -267,6 +267,5 @@ function isPasswordStrong(password: string): boolean {
 
 ## Next Steps
 
-- [🔄 Learn about recovery-based rotation](rotatePasswordAfterRecovery.md)
-- [🔑 Understand key management](decryptGeneratedKey.md)
+- [🔄 Learn about recovery-based rotation](/functions/rotatePasswordAfterRecovery.md)
 - [🛡️ Review security best practices](/reference/security.md)

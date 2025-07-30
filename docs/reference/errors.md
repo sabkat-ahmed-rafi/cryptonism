@@ -160,5 +160,4 @@ if (!result.success && result.error instanceof RecoverEncryptionError) {
 ## Next Steps
 
 - [📚 Explore Function Documentation](/functions/)
-- [🔧 See Error Handling Examples](/examples.md)
 - [🛡️ Learn Security Best Practices](/reference/security.md)

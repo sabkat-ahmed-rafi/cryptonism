@@ -226,6 +226,5 @@ interface SecretRecord {
 
 ## Next Steps
 
-- [🔓 Learn to decrypt secrets](decryptSecret.md)
-- [🔑 Understand key management](decryptGeneratedKey.md)
+- [🔓 Learn to decrypt secrets](/functions/decryptSecret.md)
 - [🛡️ Review security best practices](/reference/security.md)

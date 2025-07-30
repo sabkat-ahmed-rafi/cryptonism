@@ -206,6 +206,6 @@ async function completeAccountRecovery(
 
 ## Next Steps
 
-- [🔑 Learn about key recovery](recoverEncryptedKey.md)
-- [🔄 Understand password rotation](rotatePassword.md)
+- [🔑 Learn about key recovery](/functions/recoverEncryptedKey.md)
+- [🔄 Understand password rotation](/functions/rotatePassword.md)
 - [🛡️ Review security best practices](/reference/security.md)

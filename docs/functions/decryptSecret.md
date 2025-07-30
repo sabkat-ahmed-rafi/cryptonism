@@ -286,6 +286,5 @@ if (!result.success) {
 
 ## Next Steps
 
-- [🔐 Learn about encrypting secrets](encryptSecret.md)
-- [🔑 Understand key management](decryptGeneratedKey.md)
+- [🔐 Learn about encrypting secrets](/functions/encryptSecret.md)
 - [🛡️ Review security best practices](/reference/security.md)

@@ -289,6 +289,5 @@ CREATE TABLE user_vaults (
 
 ## Next Steps
 
-- [🔄 Set up new password after recovery](rotatePasswordAfterRecovery.md)
-- [🔑 Learn about key generation](generateEncryptedKey.md)
+- [🔄 Set up new password after recovery](/functions/rotatePasswordAfterRecovery.md)
 - [🛡️ Understand security best practices](/reference/security.md)

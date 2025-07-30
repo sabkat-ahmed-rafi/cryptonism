@@ -149,4 +149,3 @@ await benchmarkConfig({ time: 6, mem: 131072, hashLen: 32 });
 
 - [🔐 Learn About Core Functions](/functions/)
 - [🛡️ Understand Security Model](/reference/security.md)
-- [📊 See Performance Examples](/examples.md)

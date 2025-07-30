@@ -168,6 +168,5 @@ interface UserRecord {
 
 ## Next Steps
 
-- [🔓 Learn to unlock keys](decryptGeneratedKey.md)
-- [🔄 Set up password rotation](rotatePassword.md)
+- [🔄 Set up password rotation](/functions/rotatePassword.md)
 - [🛡️ Understand security model](/reference/security.md)
