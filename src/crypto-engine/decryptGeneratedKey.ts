@@ -23,7 +23,7 @@ export const decryptGeneratedKey = async ({
     // Derive key using Argon2id
     const { hash: derivedKey } = await argon2.hash({
       pass: password,
-      saltBytes,
+      salt: saltBytes,
       time: argonConfig?.time ?? defaultArgonConfig.time,
       mem: argonConfig?.mem ?? defaultArgonConfig.mem,
       hashLen: argonConfig?.hashLen ?? defaultArgonConfig.hashLen,
@@ -52,7 +52,8 @@ export const decryptGeneratedKey = async ({
 
 
     return { success: true, decryptedKey, attempts: 0 };
-  } catch {
+  } catch (error) {
+    console.log(error)
     if (trackAttempts?.enable) {
       const { attempts } = trackFailedAttempt({
         id: trackAttempts.id,
