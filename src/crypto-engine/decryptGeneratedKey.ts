@@ -52,8 +52,7 @@ export const decryptGeneratedKey = async ({
 
 
     return { success: true, decryptedKey, attempts: 0 };
-  } catch (error) {
-    console.log(error)
+  } catch {
     if (trackAttempts?.enable) {
       const { attempts } = trackFailedAttempt({
         id: trackAttempts.id,
