@@ -1,11 +1,12 @@
 # Get Start
 
-This guide will help you get started with the Encryption Utilities Library in just a few minutes.
+This guide will help you get started with cryptonism Library in just a few minutes.
 
 ## Installation
 
 ```bash
 npm install cryptonism
+
 ```
 
 ## Basic Usage
@@ -35,7 +36,7 @@ if (result.success) {
   
   // IMPORTANT: Show recovery phrase to user ONCE
   console.log('Recovery phrase:', result.recoveryPhrase);
-  // User should write this down and store it safely
+  // User should write this down and store it safely or memorize it
 }
 ```
 
@@ -55,7 +56,7 @@ const unlockResult = await decryptGeneratedKey({
 
 if (unlockResult.success) {
   const { decryptedKey } = unlockResult;
-  // Now you can encrypt/decrypt secrets
+  // Now you can encrypt/decrypt secrets using this decryptedKey
 }
 ```
 
@@ -101,7 +102,7 @@ if (retrieveResult.success) {
 
 ## Error Handling
 
-All functions return a result object with a `success` boolean:
+All functions return a object with a `success` boolean:
 
 ```typescript
 const result = await encryptSecret({
@@ -121,9 +122,8 @@ if (result.success) {
 
 1. **Never log or store decrypted keys**
 2. **Always validate user input**
-3. **Use HTTPS in production**
-4. **Implement proper session management**
-5. **Store recovery phrases securely offline**
+3. **Implement proper session management**
+4. **Show recovery phrases once and alert user to store it offline**
 
 ## Next Steps
 

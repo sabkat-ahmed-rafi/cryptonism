@@ -10,10 +10,10 @@ generateEncryptedKey(params: GenerateEncryptedKeyParams): Promise&lt;GenerateEnc
 
 <table class="parameter-table">
 <tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
+<th style="color: #161616ff;">Parameter</th>
+<th style="color: #161616ff;">Type</th>
+<th style="color: #161616ff;">Required</th>
+<th style="color: #161616ff;">Description</th>
 </tr>
 <tr>
 <td>password</td>
@@ -40,7 +40,7 @@ generateEncryptedKey(params: GenerateEncryptedKeyParams): Promise&lt;GenerateEnc
   encryptedKey: string,        // Base64 encrypted key
   salt: string,                // Base64 salt for password derivation
   iv: string,                  // Base64 initialization vector
-  recoveryPhrase: string,      // 12-word mnemonic phrase
+  recoveryPhrase: string,      // 12-word mnemonic phrase ❌ Don't store
   encryptedRecoveryKey: string,// Base64 encrypted recovery key
   recoverySalt: string,        // Base64 recovery salt
   recoveryIV: string          // Base64 recovery IV
@@ -62,7 +62,7 @@ generateEncryptedKey(params: GenerateEncryptedKeyParams): Promise&lt;GenerateEnc
 ### Basic Usage
 
 ```typescript
-import { generateEncryptedKey } from '@your-org/encryption-utils';
+import { generateEncryptedKey } from 'cryptonism';
 
 const result = await generateEncryptedKey({
   password: 'user-master-password'
@@ -132,7 +132,7 @@ const result = await generateEncryptedKey({
 You need to store these values in your database:
 
 ```typescript
-interface VaultRecord {
+interface UserRecord {
   userId: string;
   encryptedKey: string;     // Main encrypted key
   salt: string;             // Password salt
@@ -147,10 +147,9 @@ interface VaultRecord {
 ## Best Practices
 
 ### ✅ Do
-- Store all returned values in your database
+- Store all returned values in your database recovery phrase
 - Show recovery phrase to user immediately
 - Require user to confirm they've saved the recovery phrase
-- Use HTTPS for all operations
 - Validate password strength before calling
 
 ### ❌ Don't
@@ -160,13 +159,6 @@ interface VaultRecord {
 - Skip error handling
 - Use weak passwords
 
-## Error Scenarios
-
-| Error Type | Cause | Solution |
-|------------|-------|----------|
-| EncryptionError | Crypto operation failed | Retry operation |
-| Memory Error | Insufficient memory for Argon2 | Reduce mem parameter |
-| Random Error | RNG failure | Check browser/environment |
 
 ## Related Functions
 

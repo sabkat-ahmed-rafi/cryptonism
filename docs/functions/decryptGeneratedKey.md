@@ -10,10 +10,10 @@ decryptGeneratedKey(params: DecryptGeneratedKeyParams): Promise&lt;DecryptGenera
 
 <table class="parameter-table">
 <tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
+<th style="color: #161616ff;">Parameter</th>
+<th style="color: #161616ff;">Type</th>
+<th style="color: #161616ff;">Required</th>
+<th style="color: #161616ff;">Description</th>
 </tr>
 <tr>
 <td>salt</td>
@@ -43,7 +43,7 @@ decryptGeneratedKey(params: DecryptGeneratedKeyParams): Promise&lt;DecryptGenera
 <td>argonConfig</td>
 <td>ArgonConfig</td>
 <td>❌</td>
-<td>Must match the config used during generation</td>
+<td>Must match the config used during key generation</td>
 </tr>
 <tr>
 <td>trackAttempts</td>
@@ -82,7 +82,7 @@ decryptGeneratedKey(params: DecryptGeneratedKeyParams): Promise&lt;DecryptGenera
 ### Basic Usage
 
 ```typescript
-import { decryptGeneratedKey } from '@your-org/encryption-utils';
+import { decryptGeneratedKey } from 'cryptonism';
 
 // Data from your database
 const vaultData = {
@@ -221,7 +221,7 @@ async function loginUser(userId: string, password: string) {
 ### Session Management
 
 ```typescript
-// Store decrypted key securely in memory
+// Store decrypted key securely in memory or store it in a none persist state
 const userSessions = new Map<string, {
   decryptedKey: Uint8Array;
   expiresAt: Date;

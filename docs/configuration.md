@@ -1,6 +1,6 @@
 # Configuration
 
-The library uses Argon2id for key derivation with configurable parameters to balance security and performance.
+Cryptonism library uses Argon2id for key derivation with configurable parameters to balance security and performance.
 
 ## Argon2 Configuration
 
@@ -19,7 +19,7 @@ export const defaultArgonConfig = {
 You can override these defaults for specific security requirements:
 
 ```typescript
-import { generateEncryptedKey } from '@your-org/encryption-utils';
+import { generateEncryptedKey } from 'cryptonism';
 
 const customConfig = {
   time: 5,        // More iterations = slower but more secure
@@ -72,16 +72,6 @@ const browserConfig = {
 };
 ```
 
-### Server-Side Performance
-
-```typescript
-// For servers - stronger config
-const serverConfig = {
-  time: 5,
-  mem: 131072,  // 128MB
-  hashLen: 32
-};
-```
 
 ## Environment-Specific Configs
 
@@ -108,6 +98,7 @@ const prodConfig = {
 ### High-Security
 
 ```typescript
+// But slow and cause performance issue
 const highSecConfig = {
   time: 8,      // Maximum reasonable iterations
   mem: 262144,  // 256MB
@@ -143,7 +134,7 @@ await benchmarkConfig({ time: 6, mem: 131072, hashLen: 32 });
 | Priority | Time | Memory | Performance | Security |
 |----------|------|--------|-------------|----------|
 | Speed | 1-2 | 16-32MB | Fast | Lower |
-| Balanced | 3-4 | 64MB | Medium | Good |
+| Balanced | 3-4 | 64MB | Medium | Standard |
 | Security | 5-8 | 128-256MB | Slow | High |
 
 ## Recommendations

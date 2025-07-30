@@ -1,6 +1,6 @@
-# Encryption Utilities Library
+# E2E Encryption Library
 
-A comprehensive frontend library providing secure encryption, decryption, and key management functionality using industry-standard cryptographic algorithms.
+Cryptonism.js is a comprehensive frontend library providing secure encryption, decryption, and key management functionality using industry-standard cryptographic algorithms.
 
 ## Features
 
