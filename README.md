@@ -7,10 +7,12 @@ Secure your authentication flows and sensitive data with zero-knowledge architec
 
 ## ✨ Features
 
-- 🔒 Easy-to-use frontend end-to-end encryption
-- 🔑 Access decrypted `vaultKey` for custom use cases
-- ⚡ Lightweight & framework-agnostic (React, Vue, Vanilla JS, etc.)
-- 🧱 Built with TypeScript — includes types out of the box
+- 🔑 Argon2id Key Derivation: Memory-hard password hashing resistant to attacks
+- 🔐 AES-GCM Encryption: Authenticated encryption for maximum security
+- 🛡️ Recovery System: Secure mnemonic-based key recovery
+- 🔄 Password Rotation: Safe password updates without data loss
+- 📊 Attempt Tracking: Built-in protection against brute force attacks
+- ⚡ TypeScript Support: Full type safety and IntelliSense support
 
 ---
 
