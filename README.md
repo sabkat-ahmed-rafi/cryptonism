@@ -16,14 +16,14 @@ Secure your authentication flows and sensitive data with zero-knowledge architec
 
 ---
 
+## 📚 Documentation
+Full documentation is available here: [View the Docs](https://your-library-url.com)
+
 ## 📦 Installation
 
 ```bash
 npm install cryptonism
 ```
-
-## 📚 Documentation
-Full documentation is available here: [View the Docs](https://your-library-url.com)
 
 ## Usage Example
 
