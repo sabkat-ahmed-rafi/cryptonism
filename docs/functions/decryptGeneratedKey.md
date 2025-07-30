@@ -252,8 +252,8 @@ function getUserKey(userId: string): Uint8Array | null {
 |-------|-------|----------|
 | Wrong Password | Incorrect password entered | Ask user to retry |
 | Too Many Attempts | Exceeded maxAttempts | Implement lockout |
-| Invalid Data | Corrupted vault data | Check data integrity |
-| Config Mismatch | Different Argon2 config | Use original config |
+| Invalid Data | Corrupted data | Check data integrity |
+| Config Mismatch | Different Argon2 config | Use same Argon2 config for all functions |
 
 ### Error Response Example
 

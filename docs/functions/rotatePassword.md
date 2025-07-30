@@ -10,10 +10,10 @@ rotatePassword(params: RotatePasswordParams): Promise&lt;RotatePasswordReturn&gt
 
 <table class="parameter-table">
 <tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
+<th style="color: #161616ff;">Parameter</th>
+<th style="color: #161616ff;">Type</th>
+<th style="color: #161616ff;">Required</th>
+<th style="color: #161616ff;">Description</th>
 </tr>
 <tr>
 <td>encryptedKey</td>
@@ -82,7 +82,7 @@ rotatePassword(params: RotatePasswordParams): Promise&lt;RotatePasswordReturn&gt
 ### Basic Password Change
 
 ```typescript
-import { rotatePassword } from '@your-org/encryption-utils';
+import { rotatePassword } from 'cryptonism';
 
 async function changeUserPassword(
   userId: string, 
@@ -184,45 +184,6 @@ function isPasswordStrong(password: string): boolean {
 }
 ```
 
-### Bulk Password Rotation (Admin)
-
-```typescript
-async function rotatePasswordsForUsers(
-  userIds: string[], 
-  adminPassword: string,
-  newPasswordGenerator: (userId: string) => string
-) {
-  const results = [];
-  
-  for (const userId of userIds) {
-    try {
-      const vault = await getUserVault(userId);
-      const newPassword = newPasswordGenerator(userId);
-      
-      const result = await rotatePassword({
-        encryptedKey: vault.encryptedKey,
-        salt: vault.salt,
-        iv: vault.iv,
-        oldPassword: adminPassword, // Assuming admin knows current password
-        newPassword: newPassword
-      });
-      
-      if (result.success) {
-        await updateUserVault(userId, result);
-        results.push({ userId, success: true });
-      } else {
-        results.push({ userId, success: false, error: result.error.message });
-      }
-      
-    } catch (error) {
-      results.push({ userId, success: false, error: error.message });
-    }
-  }
-  
-  return results;
-}
-```
-
 ## Security Features
 
 ### 🔐 Secure Key Rotation
@@ -254,34 +215,6 @@ async function rotatePasswordsForUsers(
 4. **Return New Vault Data**
    - Return new encrypted key, salt, and IV
 
-### Database Update Pattern
-
-```typescript
-// Atomic database update
-async function updateUserVault(userId: string, newVaultData: VaultData) {
-  const transaction = await db.beginTransaction();
-  
-  try {
-    // Update main vault data
-    await transaction.query(`
-      UPDATE user_vaults 
-      SET encrypted_key = ?, salt = ?, iv = ?, updated_at = NOW()
-      WHERE user_id = ?
-    `, [newVaultData.encryptedKey, newVaultData.salt, newVaultData.iv, userId]);
-    
-    // Log the password change
-    await transaction.query(`
-      INSERT INTO security_events (user_id, event_type, timestamp)
-      VALUES (?, 'password_changed', NOW())
-    `, [userId]);
-    
-    await transaction.commit();
-  } catch (error) {
-    await transaction.rollback();
-    throw error;
-  }
-}
-```
 
 ## Error Handling
 
@@ -294,86 +227,6 @@ async function updateUserVault(userId: string, newVaultData: VaultData) {
 | Database Error | Failed to update vault | Use database transactions |
 | Crypto Error | Encryption/decryption failure | Check system resources |
 
-### Comprehensive Error Handling
-
-```typescript
-async function handlePasswordRotation(userId: string, oldPass: string, newPass: string) {
-  try {
-    const result = await rotatePassword({
-      // ... parameters
-    });
-    
-    if (!result.success) {
-      // Handle specific rotation errors
-      if (result.error instanceof PasswordRotationError) {
-        // Could be wrong old password or crypto failure
-        return { success: false, message: 'Unable to change password. Please verify your current password.' };
-      }
-    }
-    
-    return { success: true };
-    
-  } catch (error) {
-    // Handle unexpected errors
-    console.error('Unexpected error during password rotation:', error);
-    return { success: false, message: 'An unexpected error occurred. Please try again.' };
-  }
-}
-```
-
-## REST API Example
-
-```typescript
-app.post('/api/change-password', async (req, res) => {
-  try {
-    const { oldPassword, newPassword } = req.body;
-    const userId = req.user.id;
-    
-    // Validate input
-    if (!oldPassword || !newPassword) {
-      return res.status(400).json({ error: 'Both old and new passwords are required' });
-    }
-    
-    if (!isPasswordStrong(newPassword)) {
-      return res.status(400).json({ 
-        error: 'New password must be at least 12 characters with mixed case, numbers, and symbols' 
-      });
-    }
-    
-    // Get current vault
-    const vault = await getUserVault(userId);
-    if (!vault) {
-      return res.status(404).json({ error: 'User vault not found' });
-    }
-    
-    // Rotate password
-    const result = await rotatePassword({
-      encryptedKey: vault.encryptedKey,
-      salt: vault.salt,
-      iv: vault.iv,
-      oldPassword,
-      newPassword
-    });
-    
-    if (!result.success) {
-      return res.status(400).json({ error: 'Current password is incorrect' });
-    }
-    
-    // Update database
-    await updateUserVault(userId, {
-      encryptedKey: result.encryptedKey,
-      salt: result.salt,
-      iv: result.iv
-    });
-    
-    res.json({ message: 'Password changed successfully' });
-    
-  } catch (error) {
-    console.error('Password change API error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-```
 
 ## Best Practices
 
@@ -405,44 +258,6 @@ app.post('/api/change-password', async (req, res) => {
 - Consider rate limiting password change attempts
 - Implement proper session management
 - Use connection pooling for database operations
-
-## Security Considerations
-
-### Password Policy
-```typescript
-interface PasswordPolicy {
-  minLength: number;
-  requireUppercase: boolean;
-  requireLowercase: boolean;
-  requireNumbers: boolean;
-  requireSymbols: boolean;
-  preventReuse: number; // Number of previous passwords to check
-}
-
-const defaultPolicy: PasswordPolicy = {
-  minLength: 12,
-  requireUppercase: true,
-  requireLowercase: true,
-  requireNumbers: true,
-  requireSymbols: true,
-  preventReuse: 5
-};
-```
-
-### Rate Limiting
-```typescript
-// Implement rate limiting for password changes
-const passwordChangeAttempts = new Map<string, number>();
-
-function checkRateLimit(userId: string): boolean {
-  const attempts = passwordChangeAttempts.get(userId) || 0;
-  if (attempts >= 3) { // Max 3 password changes per hour
-    return false;
-  }
-  passwordChangeAttempts.set(userId, attempts + 1);
-  return true;
-}
-```
 
 ## Related Functions
 

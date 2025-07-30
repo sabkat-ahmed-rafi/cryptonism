@@ -10,10 +10,10 @@ recoverEncryptedKey(params: RecoverEncryptedKeyParams): Promise&lt;RecoverEncryp
 
 <table class="parameter-table">
 <tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
+<th style="color: #161616ff;">Parameter</th>
+<th style="color: #161616ff;">Type</th>
+<th style="color: #161616ff;">Required</th>
+<th style="color: #161616ff;">Description</th>
 </tr>
 <tr>
 <td>recoveryMnemonic</td>
@@ -74,7 +74,7 @@ recoverEncryptedKey(params: RecoverEncryptedKeyParams): Promise&lt;RecoverEncryp
 ### Basic Recovery
 
 ```typescript
-import { recoverEncryptedKey } from '@your-org/encryption-utils';
+import { recoverEncryptedKey } from 'cryptonism';
 
 // Recovery data from your database
 const recoveryData = {
@@ -233,119 +233,6 @@ if (!validateRecoveryPhrase(userInput)) {
 | Corrupted Data | Database corruption | Check recovery data integrity |
 | Wrong Config | Different Argon2 config | Use original generation config |
 | Format Error | Invalid base64 data | Verify data storage |
-
-## User Interface Examples
-
-### React Recovery Form
-
-```typescript
-function RecoveryForm({ onRecover }: { onRecover: (key: Uint8Array) => void }) {
-  const [recoveryPhrase, setRecoveryPhrase] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
-    
-    try {
-      // Validate format
-      if (!validateRecoveryPhrase(recoveryPhrase)) {
-        setError('Please enter exactly 12 words separated by spaces');
-        return;
-      }
-      
-      // Attempt recovery
-      const result = await recoverUserAccount(userId, recoveryPhrase);
-      
-      if (result.success) {
-        onRecover(result.decryptedKey);
-      } else {
-        setError(result.error);
-      }
-      
-    } catch (err) {
-      setError('Recovery failed. Please check your recovery phrase.');
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  return (
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>Recovery Phrase (12 words):</label>
-        <textarea
-          value={recoveryPhrase}
-          onChange={(e) => setRecoveryPhrase(e.target.value)}
-          placeholder="Enter your 12-word recovery phrase..."
-          rows={3}
-          disabled={loading}
-        />
-      </div>
-      
-      {error && <div className="error">{error}</div>}
-      
-      <button type="submit" disabled={loading}>
-        {loading ? 'Recovering...' : 'Recover Account'}
-      </button>
-    </form>
-  );
-}
-```
-
-### Recovery Success Flow
-
-```typescript
-function RecoverySuccess({ decryptedKey }: { decryptedKey: Uint8Array }) {
-  const [newPassword, setNewPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  
-  const handleSetNewPassword = async () => {
-    if (newPassword !== confirmPassword) {
-      alert('Passwords do not match');
-      return;
-    }
-    
-    const result = await rotatePasswordAfterRecovery({
-      recoveredDecryptedKey: decryptedKey,
-      newPassword: newPassword
-    });
-    
-    if (result.success) {
-      // Update database and redirect to login
-      await updateUserPassword(result);
-      window.location.href = '/login?recovered=true';
-    }
-  };
-  
-  return (
-    <div>
-      <h2>✅ Recovery Successful!</h2>
-      <p>Please set a new password for your account:</p>
-      
-      <input
-        type="password"
-        placeholder="New password"
-        value={newPassword}
-        onChange={(e) => setNewPassword(e.target.value)}
-      />
-      
-      <input
-        type="password"
-        placeholder="Confirm password"
-        value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
-      />
-      
-      <button onClick={handleSetNewPassword}>
-        Set New Password
-      </button>
-    </div>
-  );
-}
-```
 
 ## Best Practices
 

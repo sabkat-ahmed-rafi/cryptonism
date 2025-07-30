@@ -19,4 +19,3 @@
   - [Types](/reference/types.md)
   - [Errors](/reference/errors.md)
   - [Security](/reference/security.md)
-  - [Examples](/examples.md)

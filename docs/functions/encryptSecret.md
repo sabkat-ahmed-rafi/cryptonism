@@ -1,6 +1,6 @@
 # encryptSecret
 
-Encrypts sensitive data using AES-GCM with a decrypted key obtained from `decryptGeneratedKey`.
+Encrypts sensitive data using a decrypted key obtained from `decryptGeneratedKey`.
 
 <div class="function-signature">
 encryptSecret(params: EncryptSecretParams): Promise&lt;EncryptedSecretResult&gt;
@@ -10,10 +10,10 @@ encryptSecret(params: EncryptSecretParams): Promise&lt;EncryptedSecretResult&gt;
 
 <table class="parameter-table">
 <tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
+<th style="color: #161616ff;">Parameter</th>
+<th style="color: #161616ff;">Type</th>
+<th style="color: #161616ff;">Required</th>
+<th style="color: #161616ff;">Description</th>
 </tr>
 <tr>
 <td>secret</td>
@@ -57,7 +57,7 @@ encryptSecret(params: EncryptSecretParams): Promise&lt;EncryptedSecretResult&gt;
 ### Basic Usage
 
 ```typescript
-import { encryptSecret } from '@your-org/encryption-utils';
+import { encryptSecret } from 'cryptonism';
 
 // Assuming you have a decrypted key from decryptGeneratedKey
 const result = await encryptSecret({
@@ -68,11 +68,8 @@ const result = await encryptSecret({
 if (result.success) {
   // Store these values in your database
   const secretRecord = {
-    userId: currentUserId,
-    name: 'API Key',
     encryptedSecret: result.encryptedSecret,
     iv: result.iv,
-    createdAt: new Date()
   };
   
   await saveSecretToDatabase(secretRecord);
@@ -109,46 +106,9 @@ async function encryptMultipleSecrets(secrets: string[], decryptedKey: Uint8Arra
 
 // Usage
 const secrets = ['password123', 'api-key-xyz', 'database-url'];
-const encrypted = await encryptMultipleSecrets(secrets, userKey);
+const encrypted = await encryptMultipleSecrets(secrets, decryptedKey);
 ```
 
-### Complete Workflow Example
-
-```typescript
-async function storeUserSecret(userId: string, password: string, secretData: string) {
-  // 1. Unlock user's vault
-  const vaultData = await getUserVault(userId);
-  const unlockResult = await decryptGeneratedKey({
-    salt: vaultData.salt,
-    iv: vaultData.iv,
-    encryptedKey: vaultData.encryptedKey,
-    password
-  });
-  
-  if (!unlockResult.success) {
-    throw new Error('Failed to unlock vault');
-  }
-  
-  // 2. Encrypt the secret
-  const encryptResult = await encryptSecret({
-    secret: secretData,
-    decryptedKey: unlockResult.decryptedKey
-  });
-  
-  if (!encryptResult.success) {
-    throw new Error('Failed to encrypt secret');
-  }
-  
-  // 3. Store encrypted secret
-  await saveSecret({
-    userId,
-    encryptedSecret: encryptResult.encryptedSecret,
-    iv: encryptResult.iv
-  });
-  
-  return { success: true };
-}
-```
 
 ## Security Features
 
@@ -245,7 +205,7 @@ interface SecretRecord {
 ## Best Practices
 
 ### ✅ Do
-- Use fresh decrypted keys from `decryptGeneratedKey`
+- Use fresh decrypted key from `decryptGeneratedKey`
 - Store both `encryptedSecret` and `iv` in your database
 - Validate secret data before encryption
 - Handle errors appropriately
@@ -254,55 +214,9 @@ interface SecretRecord {
 ### ❌ Don't
 - Reuse IVs (they're generated automatically)
 - Store decrypted secrets in your database
-- Log the secret data or decrypted keys
+- Log the secret data or decrypted key
 - Skip error handling
 - Encrypt empty or null values without validation
-
-## Integration Examples
-
-### REST API Endpoint
-
-```typescript
-app.post('/api/secrets', async (req, res) => {
-  try {
-    const { name, secret, password } = req.body;
-    const userId = req.user.id;
-    
-    // Unlock vault
-    const vault = await getUserVault(userId);
-    const unlockResult = await decryptGeneratedKey({
-      ...vault,
-      password
-    });
-    
-    if (!unlockResult.success) {
-      return res.status(401).json({ error: 'Invalid password' });
-    }
-    
-    // Encrypt secret
-    const encryptResult = await encryptSecret({
-      secret,
-      decryptedKey: unlockResult.decryptedKey
-    });
-    
-    if (!encryptResult.success) {
-      return res.status(500).json({ error: 'Encryption failed' });
-    }
-    
-    // Save to database
-    const secretRecord = await saveSecret({
-      userId,
-      name,
-      encryptedSecret: encryptResult.encryptedSecret,
-      iv: encryptResult.iv
-    });
-    
-    res.json({ id: secretRecord.id, name: secretRecord.name });
-  } catch (error) {
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-```
 
 ## Related Functions
 

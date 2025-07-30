@@ -10,10 +10,10 @@ decryptSecret(params: DecryptSecretParams): Promise&lt;DecryptSecretResult&gt;
 
 <table class="parameter-table">
 <tr>
-<th>Parameter</th>
-<th>Type</th>
-<th>Required</th>
-<th>Description</th>
+<th style="color: #161616ff;">Parameter</th>
+<th style="color: #161616ff;">Type</th>
+<th style="color: #161616ff;">Required</th>
+<th style="color: #161616ff;">Description</th>
 </tr>
 <tr>
 <td>encryptedSecret</td>
@@ -62,7 +62,7 @@ decryptSecret(params: DecryptSecretParams): Promise&lt;DecryptSecretResult&gt;
 ### Basic Usage
 
 ```typescript
-import { decryptSecret } from '@your-org/encryption-utils';
+import { decryptSecret } from 'cryptonism';
 
 // Data retrieved from your database
 const secretRecord = {
@@ -249,124 +249,6 @@ if (!result.success) {
 - **Temporary**: Only holds data during decryption
 - **Automatic Cleanup**: JavaScript garbage collection handles cleanup
 - **No Persistence**: Doesn't store decrypted data
-
-## Integration Examples
-
-### REST API Endpoint
-
-```typescript
-app.get('/api/secrets/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { password } = req.body;
-    const userId = req.user.id;
-    
-    // Unlock vault
-    const vault = await getUserVault(userId);
-    const unlockResult = await decryptGeneratedKey({
-      ...vault,
-      password
-    });
-    
-    if (!unlockResult.success) {
-      return res.status(401).json({ error: 'Invalid password' });
-    }
-    
-    // Get secret record
-    const secretRecord = await getSecret(id, userId);
-    if (!secretRecord) {
-      return res.status(404).json({ error: 'Secret not found' });
-    }
-    
-    // Decrypt secret
-    const decryptResult = await decryptSecret({
-      encryptedSecret: secretRecord.encryptedSecret,
-      iv: secretRecord.iv,
-      decryptedKey: unlockResult.decryptedKey
-    });
-    
-    if (!decryptResult.success) {
-      return res.status(500).json({ error: 'Failed to decrypt secret' });
-    }
-    
-    res.json({
-      id: secretRecord.id,
-      name: secretRecord.name,
-      secret: decryptResult.decryptedSecret,
-      createdAt: secretRecord.createdAt
-    });
-    
-  } catch (error) {
-    console.error('API error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-```
-
-### React Component Example
-
-```typescript
-function SecretViewer({ secretId }: { secretId: string }) {
-  const [secret, setSecret] = useState<string | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  
-  const decryptAndShow = async (password: string) => {
-    setLoading(true);
-    setError(null);
-    
-    try {
-      // Get user's vault and secret record
-      const [vault, secretRecord] = await Promise.all([
-        getUserVault(),
-        getSecretRecord(secretId)
-      ]);
-      
-      // Unlock vault
-      const unlockResult = await decryptGeneratedKey({
-        ...vault,
-        password
-      });
-      
-      if (!unlockResult.success) {
-        setError('Invalid password');
-        return;
-      }
-      
-      // Decrypt secret
-      const decryptResult = await decryptSecret({
-        encryptedSecret: secretRecord.encryptedSecret,
-        iv: secretRecord.iv,
-        decryptedKey: unlockResult.decryptedKey
-      });
-      
-      if (decryptResult.success) {
-        setSecret(decryptResult.decryptedSecret);
-      } else {
-        setError('Failed to decrypt secret');
-      }
-      
-    } catch (err) {
-      setError('An error occurred');
-    } finally {
-      setLoading(false);
-    }
-  };
-  
-  return (
-    <div>
-      {secret ? (
-        <div>
-          <strong>Secret:</strong> {secret}
-          <button onClick={() => setSecret(null)}>Hide</button>
-        </div>
-      ) : (
-        <PasswordPrompt onSubmit={decryptAndShow} loading={loading} error={error} />
-      )}
-    </div>
-  );
-}
-```
 
 ## Best Practices
 
