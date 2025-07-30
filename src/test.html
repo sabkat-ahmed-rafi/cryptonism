@@ -1,0 +1,76 @@
+<!-- test.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Library Test</title>
+</head>
+<body>
+  <h1>Test Your Library</h1>
+  <script type="module">
+     import { generateEncryptedKey, decryptGeneratedKey, encryptSecret, decryptSecret, rotatePassword, recoverEncryptedKey, rotatePasswordAfterRecovery } from './index.ts';
+
+
+    async function test() {
+      try {
+
+        // const argonConfig = {
+        //    time: 4,
+        //    mem: 65536,
+        //    hashLen: 32
+        // };
+
+
+        // const trackAttempts = {
+        //   enable: true,
+        //   id: "123",
+        //   maxAttempts: 3
+        // }
+
+
+        // const { encryptedKey, salt, iv, recoveryPhrase, recoverySalt, recoveryIV, encryptedRecoveryKey } = await generateEncryptedKey({password: 'rafi tumi ki pagol', argonConfig});
+        
+        // const { decryptedKey } = await decryptGeneratedKey({
+        //   salt,
+        //   iv,
+        //   encryptedKey,
+        //   password: 'rafi tumi ki pagol',
+        //   argonConfig
+        // });
+
+        // const {decryptedKey} = await recoverEncryptedKey({
+        //   recoveryMnemonic: recoveryPhrase,
+        //   encryptedRecoveryKey,
+        //   recoverySalt,
+        //   recoveryIV,
+        //   argonConfig
+        // })
+
+        // const result = await rotatePasswordAfterRecovery({
+        //     recoveredDecryptedKey: decryptedKey,
+        //     newPassword: "sabkat sabkat",
+        // })
+
+        // console.log(result)
+
+        // const rotatePasswordResult = await rotatePassword({encryptedKey, salt, iv, oldPassword: 'rafi tumi ki pagol', newPassword: "oi salar pola", argonConfig})
+
+        // const { encryptedSecret, iv:secretIV } = await encryptSecret({
+        //   secret: 'rafi rafi',
+        //   decryptedKey,
+        //   argonConfig
+        // })
+        
+        // const result2 = await decryptSecret({encryptedSecret, iv:secretIV, decryptedKey, argonConfig});
+        // console.log('Encryption result:', result2);
+
+        
+      } catch (err) {
+        console.error('Error:', err);
+      }
+    }
+
+    test();
+  </script>
+</body>
+</html>
