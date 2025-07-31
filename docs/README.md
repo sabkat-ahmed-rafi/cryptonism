@@ -14,7 +14,7 @@ Cryptonism.js is a comprehensive frontend library providing secure encryption, d
 ## Quick Start
 
 ```typescript
-import { generateEncryptedKey, encryptSecret, decryptSecret } from 'cryptonism';
+import { generateEncryptedKey, decryptGeneratedKey } from 'cryptonism';
 
 // 1. Generate a new encrypted key
 const keyResult = await generateEncryptedKey({
@@ -24,19 +24,17 @@ const keyResult = await generateEncryptedKey({
 if (keyResult.success) {
   // Store these values securely
   const { encryptedKey, salt, iv, recoveryPhrase } = keyResult;
-  
-  // 2. Encrypt a secret
-  const encryptResult = await encryptSecret({
-    secret: 'my-secret-data',
-    decryptedKey: keyResult.decryptedKey
+
+  const result = await decryptGeneratedKey({
+    salt,
+    iv,
+    encryptedKey,
+    password: 'user-secure-password'
   });
+
+  const decryptedKey = result.decryptedKey;
+  // Now you can use this key to encrypt/decrypt secrets
   
-  // 3. Later, decrypt the secret
-  const decryptResult = await decryptSecret({
-    encryptedSecret: encryptResult.encryptedSecret,
-    iv: encryptResult.iv,
-    decryptedKey: keyResult.decryptedKey
-  });
 }
 ```
 
