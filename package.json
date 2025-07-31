@@ -1,13 +1,11 @@
 {
   "name": "cryptonism",
   "version": "1.0.1",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "types": "dist/index.d.mts",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.mts"
     }
   },
   "scripts": {
@@ -16,7 +14,8 @@
     "build": "tsup"
   },
   "files": [
-    "dist"
+    "dist/index.mjs",
+    "dist/index.d.mts"
   ],
   "keywords": [
     "cryptonism",
