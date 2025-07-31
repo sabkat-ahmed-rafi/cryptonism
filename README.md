@@ -17,7 +17,7 @@ Secure your authentication flows and sensitive data with zero-knowledge architec
 ---
 
 ## 📚 Documentation
-Full documentation is available here: [View the Docs](https://your-library-url.com)
+Full documentation is available here: [View the Docs](https://cryptonism.vercel.app)
 
 ## 📦 Installation
 
@@ -182,4 +182,4 @@ if (result.success) {
 ```
 
 
-For advanced usage, configuration options, and troubleshooting tips, please refer to the [Full Documentation](#).
+For advanced usage, configuration options, and troubleshooting tips, please refer to the [Full Documentation](https://cryptonism.vercel.app).
